@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>상세보기</title></head>
+<body>
+<h1>📄 게시글 상세</h1>
+<form th:action="@{/crudBoard/update/{id}(id=${post.postId})}" method="get">
+    <button type="submit">✏️ 수정하기</button>
+</form>
+
+<p><strong>제목:</strong> <span th:text="${post.title}"></span></p>
+<p><strong>내용:</strong> <span th:text="${post.content}"></span></p>
+
+<h3>📎 첨부파일</h3>
+<ul>
+    <li th:each="file : ${post.file}" th:text="${file.originalName}"></li>
+</ul>
+
+<form th:action="@{/crudBoard/delete/{id}(id=${post.postId})}" method="post">
+    <button type="submit">🗑️ 삭제</button>
+</form>
+
+<a href="/crudBoard/view">목록으로</a>
+</body>
+</html>

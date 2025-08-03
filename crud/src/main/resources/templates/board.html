@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판 목록</title>
+</head>
+<body>
+<h1>📋 게시판</h1><br>
+<h3><a th:href="@{/crudBoard/write}">글 작성</a></h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+    <tr>
+        <th>글 번호</th>
+        <th>제목</th>
+        <th>내용</th>
+        <th>작성자</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="post : ${posts}">
+        <td th:text="${post.postId}">postId</td>
+        <td><a th:href="@{/crudBoard/post/{id}(id=${post.postId})}" th:text="${post.title ?: '제목없음'}">제목</a></td>
+        <td th:text="${
+              #strings.isEmpty(post.content) ?
+              '내용없음' :
+              (post.content.length() > 10 ?
+                  post.content.substring(0,10) + '...' :
+                  post.content)
+        }"></td>
+
+        <td th:text="${post.name ?: '익명'}">name</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

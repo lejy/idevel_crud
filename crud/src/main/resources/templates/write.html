@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>글쓰기</title></head>
+<body>
+<h1>📝 글쓰기</h1>
+<form th:action="@{/crudBoard/write}" method="post" enctype="multipart/form-data">
+    제목: <input placeholder="미입력시 제목없음" type="text" name="title"><br>
+    내용: <textarea placeholder="미입력시 내용없음" name="content"></textarea><br>
+    작성자: <input placeholder="미입력시 익명" type="text" name="name"><br>
+    첨부파일 이름: <input placeholder="미입력시 기본이름" name="filename"><br>
+    첨부파일: <input type="file" name="files" multiple><br>
+    <button type="submit">등록</button>
+</form>
+</body>
+</html>

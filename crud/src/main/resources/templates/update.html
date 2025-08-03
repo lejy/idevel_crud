@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>게시글 수정</title></head>
+<body>
+<h1>✏️ 게시글 수정</h1>
+
+<form th:action="@{/crudBoard/update}" method="post">
+  <input type="hidden" name="id" th:value="${post.postId}" />
+  제목: <input type="text" name="title" th:value="${post.title}" /><br>
+  내용: <textarea name="content" th:text="${post.content}"></textarea><br>
+  작성자: <input type="text" name="name" th:value="${post.name}" /><br>
+  <button type="submit">수정 완료</button>
+</form>
+
+
+<a th:href="@{/crudBoard/view}">← 목록으로</a>
+</body>
+</html>
+
+
