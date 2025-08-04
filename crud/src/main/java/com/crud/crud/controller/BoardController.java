@@ -3,6 +3,7 @@ package com.crud.crud.controller;
 import com.crud.crud.entity.Board;
 import com.crud.crud.entity.FileSystem;
 import com.crud.crud.repository.BoardRepository;
+import com.crud.crud.repository.FileSystemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,9 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Controller
 @RequestMapping("/crudBoard")
@@ -20,6 +28,7 @@ import java.util.*;
 public class BoardController {
 
     private final BoardRepository boardRepository;
+    private final FileSystemRepository fileSystemRepository;
 
 
     @Value("${file.upload-dir}")
@@ -82,6 +91,28 @@ public class BoardController {
         boardRepository.save(post);
 
         return "redirect:/crudBoard/view";
+    }
+
+    //파일다운로드
+    @GetMapping("/download/file/{originalName}")
+    public ResponseEntity<Resource> downloadFileById(@PathVariable("originalName") String originalName) throws IOException {
+        FileSystem file = (FileSystem) fileSystemRepository.findByOriginalName(originalName).orElseThrow();
+
+
+        Path filePath = Paths.get(file.getPath());
+        Resource resource = new UrlResource(filePath.toUri());
+
+        if (!resource.exists() || !resource.isReadable()) {
+            throw new FileNotFoundException("파일을 찾을 수 없거나 읽을 수 없습니다.");
+        }
+
+        String encodedName = URLEncoder.encode(file.getOriginalName(), StandardCharsets.UTF_8);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + encodedName + "\"")
+                .body(resource);
     }
 
     //게시글 수정 폼

@@ -12,8 +12,13 @@
 
 <h3>📎 첨부파일</h3>
 <ul>
-    <li th:each="file : ${post.file}" th:text="${file.originalName}"></li>
+    <li th:each="file : ${post.file}">
+        <a th:href="@{/crudBoard/download/file/{id}(id=${file.originalName})}"
+           th:text="${file.originalName}"></a>
+    </li>
 </ul>
+
+
 
 <form th:action="@{/crudBoard/delete/{id}(id=${post.postId})}" method="post">
     <button type="submit">🗑️ 삭제</button>
